@@ -1046,7 +1046,7 @@ vim.keymap.set('n', '<leader>tt', ':split | terminal<CR>', { desc = '[T]erminal 
 vim.keymap.set('n', '<leader>tv', ':vsplit | terminal<CR>', { desc = '[T]erminal Vertical Split' })
 -- Map Alt+\ in normal mode to toggle Copilot
 --vim.keymap.set('n', '<leader>tc', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
-vim.keymap.set('n', '<C-/>', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
+vim.keymap.set({ 'n', 'i' }, '<C-M-/>', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
 vim.keymap.set('n', '<C-Home>', ':tabprevious<CR>', { noremap = true })
 vim.keymap.set('n', '<C-End>', ':tabnext<CR>', { noremap = true })
 --vim.api.nvim_set_keymap()
