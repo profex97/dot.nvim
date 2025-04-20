@@ -15,7 +15,7 @@
 ========         `"")----------------(""`   ___________      ========
 ========        /::::::::::|  |::::::::::\  \ no mouse \     ========
 ========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
+========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========Bill Joy 
 ========                                                     ========
 =====================================================================
 =====================================================================
@@ -99,10 +99,10 @@ vim.g.have_nerd_font = false
 --  For more options, you can see `:help option-list`
 
 -- Make line numbers default
-vim.opt.number = true
+-- vim.opt.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.opt.relativenumber = true
+vim.opt.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.opt.mouse = 'a'
@@ -399,7 +399,11 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
+        defaults = {
+          file_ignore_patterns = {
+            '%.git/',
+          },
+        },
         --   mappings = {
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
@@ -420,7 +424,7 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      -- vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -428,6 +432,35 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+
+      -- custom search files
+      local my_find_files
+      my_find_files = function(opts, no_ignore)
+        opts = opts or {}
+        no_ignore = vim.F.if_nil(no_ignore, false)
+        opts.attach_mappings = function(_, map)
+          map({ 'n', 'i' }, '<C-.>', function(prompt_bufnr) -- <C-h> to toggle modes
+            local prompt = require('telescope.actions.state').get_current_line()
+            require('telescope.actions').close(prompt_bufnr)
+            no_ignore = not no_ignore
+            my_find_files({ default_text = prompt }, no_ignore)
+          end)
+          return true
+        end
+
+        if no_ignore then
+          opts.no_ignore = true
+          opts.hidden = true
+          opts.prompt_title = 'Find Files <ALL>'
+          require('telescope.builtin').find_files(opts)
+        else
+          opts.prompt_title = 'Find Files'
+          require('telescope.builtin').find_files(opts)
+        end
+      end
+
+      vim.keymap.set('n', '<leader>sf', my_find_files, { desc = '[S]earch [F]iles (Toggle hidden: <C-h>)' })
+      --//--
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -545,11 +578,11 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
@@ -878,11 +911,13 @@ require('lazy').setup({
     config = function()
       ---@diagnostic disable-next-line: missing-fields
       require('tokyonight').setup {
+        transparent = true, -- Enable this to remove the background color,
         styles = {
-          comments = { italic = false }, -- Disable italics in comments
+          sidebars = 'transparent', -- Enable this to remove the background color for sidebars
+          floats = 'transparent', -- Enable this to remove the background color for floats
         },
+        comments = { italic = false }, -- Disable italics in comments
       }
-
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
@@ -969,8 +1004,11 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.codecompanion',
+  require 'kickstart.plugins.copilot',
+  require 'kickstart.plugins.yazi',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -1004,5 +1042,14 @@ require('lazy').setup({
   },
 })
 
+vim.keymap.set('n', '<leader>tt', ':split | terminal<CR>', { desc = '[T]erminal Horizontal Split' })
+vim.keymap.set('n', '<leader>tv', ':vsplit | terminal<CR>', { desc = '[T]erminal Vertical Split' })
+-- Map Alt+\ in normal mode to toggle Copilot
+--vim.keymap.set('n', '<leader>tc', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
+vim.keymap.set('n', '<C-/>', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
+vim.keymap.set('n', '<C-Home>', ':tabprevious<CR>', { noremap = true })
+vim.keymap.set('n', '<C-End>', ':tabnext<CR>', { noremap = true })
+--vim.api.nvim_set_keymap()
+-- Options
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
