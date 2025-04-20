@@ -1,6 +1,5 @@
 # kickstart.nvim
-My personal adotion of kickstart vim (copilot, custom toogles)
-
+My personal adoption of kickstart vim (copilot, custom toggles)
 **Dependencies**
 - [Neovim]>=0.11.0
 - [fzf]

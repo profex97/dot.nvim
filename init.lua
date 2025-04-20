@@ -199,6 +199,55 @@ vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper win
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
 -- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
 -- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+--
+--!! Function to swap the current tab with the next tab
+--function Swap_with_next_tab()
+--  local current_tab = vim.fn.tabpagenr()
+--  local last_tab = vim.fn.tabpagenr '$'
+--
+--  -- Only proceed if there is a next tab
+--  if current_tab < last_tab then
+--    -- Move the current tab to the right (after the next tab)
+--    vim.cmd(current_tab .. 'tabmove ' .. current_tab)
+--  end
+--end
+--
+---- Function to swap the current tab with the previous tab
+--local function Swap_with_prev_tab()
+--  local current_tab = vim.fn.tabpagenr()
+--
+--  -- Only proceed if there is a previous tab
+--  if current_tab > 1 then
+--    -- Move the current tab to the left (before the previous tab)
+--    vim.cmd(current_tab .. 'tabmove ' .. (current_tab - 2))
+--  end
+--end
+
+function Swap_with_next_tab()
+  local current_tab = vim.fn.tabpagenr()
+  local last_tab = vim.fn.tabpagenr '$'
+
+  if current_tab < last_tab then
+    -- +1 moves it after the next tab
+    vim.cmd('tabmove +' .. 1)
+  end
+end
+
+function Swap_with_prev_tab()
+  local current_tab = vim.fn.tabpagenr()
+
+  if current_tab > 1 then
+    -- -1 moves it before the previous tab
+    vim.cmd('tabmove -' .. 1)
+  end
+end
+--!! Keymaps for swapping tabs
+vim.api.nvim_set_keymap('n', '<C-S-h>', '<Cmd>lua Swap_with_prev_tab()<CR>', { noremap = true, silent = true, desc = 'Move window to the left' })
+vim.api.nvim_set_keymap('n', '<C-S-l>', '<Cmd>lua Swap_with_next_tab()<CR>', { noremap = true, silent = true, desc = 'Move window to the right' })
+--!! Keymaps for navigating tabs
+vim.keymap.set('n', '<C-h>', ':tabprevious<CR>', { noremap = true })
+vim.keymap.set('n', '<C-l>', ':tabnext<CR>', { noremap = true })
+--end
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -1047,8 +1096,6 @@ vim.keymap.set('n', '<leader>tv', ':vsplit | terminal<CR>', { desc = '[T]erminal
 -- Map Alt+\ in normal mode to toggle Copilot
 --vim.keymap.set('n', '<leader>tc', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
 vim.keymap.set({ 'n', 'i' }, '<C-M-/>', toggle_copilot, { noremap = true, silent = true, desc = '[T]oggle [C]opilot' })
-vim.keymap.set('n', '<C-Home>', ':tabprevious<CR>', { noremap = true })
-vim.keymap.set('n', '<C-End>', ':tabnext<CR>', { noremap = true })
 --vim.api.nvim_set_keymap()
 -- Options
 -- The line beneath this is called `modeline`. See `:help modeline`
