@@ -790,6 +790,13 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'gopls', -- Go language server
+        'delve', -- Go debugger
+        'python-lsp-server',
+        'docker-compose-language-service',
+        'dockerfile-language-server',
+        'ansible-lint', -- Ansible linter
+        'terraform-ls', -- Terraform language server
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

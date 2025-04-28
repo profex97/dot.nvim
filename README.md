@@ -1,9 +1,10 @@
 # kickstart.nvim
 My personal adoption of kickstart vim (copilot, custom toggles)
 **Dependencies**
-- [Neovim]>=0.11.0
-- [fzf]
-- [rg]
+- [Neovim](https://github.com/neovim/neovim) >=0.11.0
+- [fzf](https:/github.com/junegunn/fzf)
+- [rg](https:/github.com/BurntSushi/ripgrep)
+- [npm](https://nodejs.org/en/) (for some lsp plugins)
 
 **Linux and Mac**
 
