@@ -788,16 +788,16 @@ require('lazy').setup({
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'gopls', -- Go language server
-        'delve', -- Go debugger
-        'python-lsp-server',
-        'docker-compose-language-service',
-        'dockerfile-language-server',
-        'ansible-lint', -- Ansible linter
-        'terraform-ls', -- Terraform language server
-      })
+      -- vim.list_extend(ensure_installed, {
+      --   'stylua', -- Used to format Lua code
+      --   'gopls', -- Go language server
+      --   'delve', -- Go debugger
+      --   'python-lsp-server',
+      --   'docker-compose-language-service',
+      --   'dockerfile-language-server',
+      --   'ansible-lint', -- Ansible linter
+      --   'terraform-ls', -- Terraform language server
+      -- })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
@@ -962,22 +962,24 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
+    -- 'folke/tokyonight.nvim',
+    'rose-pine/neovim', -- Rose Pine colorscheme
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        transparent = true, -- Enable this to remove the background color,
-        styles = {
-          sidebars = 'transparent', -- Enable this to remove the background color for sidebars
-          floats = 'transparent', -- Enable this to remove the background color for floats
-        },
-        comments = { italic = false }, -- Disable italics in comments
-      }
+      -- require('tokyonight').setup {
+      --   transparent = true, -- Enable this to remove the background color,
+      --   styles = {
+      --     sidebars = 'transparent', -- Enable this to remove the background color for sidebars
+      --     floats = 'transparent', -- Enable this to remove the background color for floats
+      --   },
+      --   comments = { italic = false }, -- Disable italics in comments
+      -- }
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'rose-pine-main'
     end,
   },
 
